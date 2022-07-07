@@ -12,8 +12,8 @@ const canvas = document.querySelector('canvas')
 if(!canvas)
 	throw new Error('No canvas found')
 
-canvas.width = window.innerWidth
-canvas.height = window.innerHeight
+canvas.width = window.innerWidth * devicePixelRatio * 2
+canvas.height = window.innerHeight * devicePixelRatio * 2
 
 const ctx = canvas.getContext('2d')
 if(!ctx)
