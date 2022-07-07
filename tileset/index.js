@@ -1,7 +1,8 @@
 import naiveRules from './rules.js'
 import { getImageBitmap } from '../utils.js'
 
-const tileSet = await getImageBitmap('/tileset/image.jpg')
+const dirname = import.meta.url.split('/').slice(0, -1).join('/')
+const tileSet = await getImageBitmap(`${dirname}/image.jpg`)
 
 const params = {
 	tile: {
