@@ -1,0 +1,11 @@
+body {
+	margin: 0;
+	background: #051016;
+	color: white;
+	touch-action: none;
+}
+
+canvas {
+	width: 100vw;
+	height: var(--svh, 100vh);
+}
