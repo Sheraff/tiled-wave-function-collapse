@@ -1,4 +1,5 @@
-import DEFINITION from './tileset/index.js'
+// import DEFINITION from './carcassonne/index.js'
+import DEFINITION from './cpu/index.js'
 
 const GRID_SIZE = [30, 20]
 const NEIGHBORS = [
@@ -38,7 +39,7 @@ async function loop(ctx, array, backtrack) {
 	try {
 		assignSuitableOption(array, randomCell, backtrack)
 		collapseNeighbors(array, randomCell)
-		backtrack.cursor = Math.max(0, backtrack.cursor - 0.1)
+		backtrack.cursor = Math.max(0, backtrack.cursor - DEFINITION.backtrack.decrease)
 		draw(ctx, array)
 		await frame()
 		loop(ctx, array, backtrack)
@@ -55,7 +56,7 @@ async function loop(ctx, array, backtrack) {
 }
 
 function resetToCursor(backtrack) {
-	backtrack.cursor += 1
+	backtrack.cursor += DEFINITION.backtrack.increase
 	const revertCount = Math.min(Math.floor(backtrack.cursor), backtrack.stack.length)
 	const [reset] = backtrack.stack.splice(backtrack.stack.length - revertCount)
 	return JSON.parse(reset)
@@ -65,10 +66,10 @@ function createNewGrid([width, height]) {
 	return new Array(width * height).fill(0).map((_, index, array) => {
 		const x = index % GRID_SIZE[0]
 		const y = Math.floor(index / GRID_SIZE[0])
-		const top    = y === 0          ? [0,1] : [0,1,2,3]
-		const right  = x === width - 1  ? [0,1] : [0,1,2,3]
-		const bottom = y === height - 1 ? [0,1] : [0,1,2,3]
-		const left   = x === 0          ? [0,1] : [0,1,2,3]
+		const top    = y === 0          ? DEFINITION.initial.border : DEFINITION.initial.inside
+		const right  = x === width - 1  ? DEFINITION.initial.border : DEFINITION.initial.inside
+		const bottom = y === height - 1 ? DEFINITION.initial.border : DEFINITION.initial.inside
+		const left   = x === 0          ? DEFINITION.initial.border : DEFINITION.initial.inside
 		const entropy = top.length + right.length + bottom.length + left.length
 		return ({
 			index,
@@ -87,11 +88,7 @@ function createNewGrid([width, height]) {
 }
 
 function assignSuitableOption(array, cell, backtrack) {
-	const options = DEFINITION.rules.filter(option => 
-		cell.accepts.every(
-			(directionalOption, i) => directionalOption.includes(option.is[i])
-		)
-	)
+	const options = DEFINITION.findSuitableTiles(cell.accepts)
 
 	if (options.length === 0)
 		throw new Error('No suitable options')
@@ -116,9 +113,7 @@ function collapseNeighbors(array, cell, stack = []) {
 			? [cell.tile.is[i]]
 			: cell.accepts[i]
 		const mirrorIndex = (i + 2) % 4
-		const compatibleOptions = neighbor.accepts[mirrorIndex].filter(
-			option => possibilities.includes(option)
-		)
+		const compatibleOptions = DEFINITION.findSockets(possibilities, neighbor.accepts[mirrorIndex])
 		if (compatibleOptions.length === 0)
 			throw new Error('Invalid neighbor')
 		const entropyDifference = neighbor.accepts[mirrorIndex].length - compatibleOptions.length
