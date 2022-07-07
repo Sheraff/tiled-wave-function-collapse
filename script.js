@@ -1,6 +1,6 @@
 import DEFINITION from './tileset/index.js'
 
-const GRID_SIZE = [10, 10]
+const GRID_SIZE = [30, 20]
 const NEIGHBORS = [
 	[0, -1],
 	[1, 0],
@@ -19,12 +19,7 @@ const ctx = canvas.getContext('2d')
 if(!ctx)
 	throw new Error('No context found')
 
-// const coords = getSourceCoordFromIndex(18)
-// ctx.drawImage(DEFINITION.tileSet, ...coords, 0, 0, 256, 256)
 start(ctx)
-// const array = createNewGrid(GRID_SIZE)
-// array[array.length - 1].tile = DEFINITION.rules.at(-1)
-// draw(ctx, array)
 
 
 async function start(ctx) {
@@ -70,10 +65,10 @@ function createNewGrid([width, height]) {
 	return new Array(width * height).fill(0).map((_, index, array) => {
 		const x = index % GRID_SIZE[0]
 		const y = Math.floor(index / GRID_SIZE[0])
-		const top    = y === 0          ? [0] : [0,1,2,3]
-		const right  = x === width - 1  ? [0] : [0,1,2,3]
-		const bottom = y === height - 1 ? [0] : [0,1,2,3]
-		const left   = x === 0          ? [0] : [0,1,2,3]
+		const top    = y === 0          ? [0,1] : [0,1,2,3]
+		const right  = x === width - 1  ? [0,1] : [0,1,2,3]
+		const bottom = y === height - 1 ? [0,1] : [0,1,2,3]
+		const left   = x === 0          ? [0,1] : [0,1,2,3]
 		const entropy = top.length + right.length + bottom.length + left.length
 		return ({
 			index,
