@@ -68,12 +68,16 @@ const initial = {
 		[3, 0, 0],
 		[3, 3, 3],
 		[3, 0, 3],
+		[0, 2, 3],
+		[3, 2, 0],
+		[0, 1, 3],
+		[3, 1, 0],
 	],
 }
 
 const backtrack = {
 	increase: 1,
-	decrease: 0.5,
+	decrease: 0.3,
 }
 
 export default {
