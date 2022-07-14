@@ -1,5 +1,6 @@
-// import DEFINITION from './carcassonne/index.js'
-import DEFINITION from './cpu/index.js'
+import DEFINITION from './carcassonne/index.js'
+// import DEFINITION from './cpu/index.js'
+// import DEFINITION from './abstract/index.js'
 
 const GRID_SIZE = [30, 20]
 const NEIGHBORS = [
@@ -36,6 +37,7 @@ async function loop(ctx, array, backtrack) {
 		return
 	}
 	const randomCell = cells[Math.floor(Math.random() * cells.length)]
+	// const randomCell = cells[0]
 	try {
 		assignSuitableOption(array, randomCell, backtrack)
 		collapseNeighbors(array, randomCell)
